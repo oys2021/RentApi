@@ -30,8 +30,8 @@ A RESTful API for managing a rental property platform, built with Django and Dja
 
 ```bash
 # 1. Clone the repository
-git clone <REPO_URL>
-cd <PROJECT_FOLDER>
+git clone https://github.com/oys2021/RentApi.git
+cd RentApi
 
 # 2. Create and activate a virtual environment
 python -m venv venv
