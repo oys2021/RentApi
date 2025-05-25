@@ -13,12 +13,13 @@ A RESTful API for managing a rental property platform, built with Django and Dja
 - Notifications for key events
 - Role-based access control (e.g. Tenant, Landlord)
 - Media uploads (property images, attachments)
+- tenant to landloard communication
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Django, Django REST Framework
+- **Backend**: Django, Django REST Framework, Django channels
 - **Authentication**: JWT via `djangorestframework-simplejwt`
 - **Database**: SQLite (Dev), PostgreSQL (Prod recommended)
 - **Media Storage**: Local filesystem or cloud (e.g. AWS S3)
