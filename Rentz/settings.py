@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-w0ousdyrqcy#gd%abup2yx(#@j+)-s)rs03hi__jt&ye^v%o_&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -62,6 +62,12 @@ CORS_ALLOW_HEADERS = [
     'authorization',
     'x-csrftoken',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://rentz-ecy1.onrender.com',
+]
+
+
 
 AUTH_USER_MODEL = 'authentication.User'
 
