@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,12 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-w0ousdyrqcy#gd%abup2yx(#@j+)-s)rs03hi__jt&ye^v%o_&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'rentz-ecy1.onrender.com',  
+    'yaw21.pythonanywhere.com',
+    'core',
 ]
 
 
@@ -52,7 +54,8 @@ INSTALLED_APPS = [
     'maintainace',
     'notice',
     'chat',
-    
+    'drf_yasg',
+
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -64,7 +67,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://rentz-ecy1.onrender.com',
+    'https://yaw21.pythonanywhere.com/',
 ]
 
 
@@ -87,7 +90,7 @@ ROOT_URLCONF = 'Rentz.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,6 +102,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'Rentz.wsgi.application'
 
@@ -140,9 +144,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
+     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated', 
     ],
 }
 
@@ -165,45 +168,50 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 import os
 
-MEDIA_URL = '/media/' 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# settings.py
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # SSL
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False    
-EMAIL_HOST_USER = 'opokuyawsarfo3@gmail.com'  
-EMAIL_HOST_PASSWORD = 'xytcavmnvhsfwkgz'  
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'opokuyawsarfo3@gmail.com'
+EMAIL_HOST_PASSWORD = 'xytcavmnvhsfwkgz'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': None,
+    'USE_SESSION_AUTH': False,
+    'LOGIN_URL': None,
+    'LOGOUT_URL': None,
+}
 
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer', 
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    
-    'ROTATE_REFRESH_TOKENS': False,                
-    'BLACKLIST_AFTER_ROTATION': True,              
-    'UPDATE_LAST_LOGIN': False,               
-    
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
     }

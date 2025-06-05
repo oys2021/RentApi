@@ -12,9 +12,12 @@ django-cors-headers==4.6.0
 django-rest-framework==0.1.0
 djangorestframework==3.15.2
 djangorestframework_simplejwt==5.4.0
+drf-yasg==1.21.10
 hyperlink==21.0.0
 idna==3.10
 incremental==24.7.2
+inflection==0.5.1
+packaging==25.0
 pillow==11.1.0
 pip-system-certs==4.0
 pyasn1==0.6.1
@@ -24,6 +27,8 @@ PyJWT==2.10.1
 pyOpenSSL==25.0.0
 python-dotenv==1.0.1
 python-http-client==3.3.7
+pytz==2025.2
+PyYAML==6.0.2
 sendgrid==6.11.0
 service-identity==24.2.0
 setuptools==75.8.0
@@ -33,5 +38,6 @@ Twisted==24.11.0
 txaio==23.1.1
 typing_extensions==4.12.2
 tzdata==2025.1
+uritemplate==4.2.0
 wrapt==1.17.2
 zope.interface==7.2
