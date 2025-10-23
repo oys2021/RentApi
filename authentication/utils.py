@@ -110,7 +110,7 @@ def generate_unique_otp():
         if not OneTimePassword.objects.filter(code=otp_code).exists():  # Check uniqueness
             return otp_code
         
-# utils.py (or wherever the OTP logic is defined)
+
 def generate_and_store_otp(email):
     try:
         user = User.objects.get(email=email)

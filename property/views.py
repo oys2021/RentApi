@@ -11,12 +11,9 @@ from property.serializers import *
 from django.db import IntegrityError
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def property(request, usr):
-    try:
-        landlord = User.objects.get(username=usr, role='Landlord') 
-    except User.DoesNotExist:
-        return Response({"error": "Landlord with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def property_view(request):
+    landlord=request.user
 
     if request.method == "GET":
         all_properties = Property.objects.filter(landlord=landlord) 
@@ -25,7 +22,7 @@ def property(request, usr):
 
     elif request.method == "POST":
         data = request.data
-        data["landlord"] = usr  
+        data["landlord"] = landlord  
         serializer = PropertySerializer(data=data,context={'request': request})
          
         if serializer.is_valid():
@@ -37,12 +34,9 @@ def property(request, usr):
 
 
 @api_view(['GET','PUT'])
-@permission_classes([AllowAny])
-def property_detail(request,usr,id):
-    try:
-        landlord = User.objects.get(username=usr, role='Landlord') 
-    except User.DoesNotExist:
-        return Response({"error": "Landlord with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def property_detail_view(request,id):
+    landlord=request.user
     if request.method == "GET":
         user = Property.objects.get(landlord=landlord, id=id)
         serializer = PropertySerializer(user,context={'request': request})
@@ -56,19 +50,12 @@ def property_detail(request,usr,id):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-            
-
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def lease(request, usr):
-    try:
-        tenant = User.objects.get(username=usr, role='Tenant')
-    except User.DoesNotExist:
-        return Response({"error": "Tenant with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
-
+@permission_classes([IsAuthenticated])
+def lease_view(request):
+    tenant = request.user
     if request.method == "GET":
-        # Fetch all leases for the tenant
         all_properties = Lease.objects.filter(tenant=tenant)
         serializer = LeaseSerializer(all_properties, many=True)
         return Response(serializer.data)
@@ -94,14 +81,10 @@ def lease(request, usr):
                 )
         return Response({"error": "Invalid request", "details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['GET','PUT'])
-@permission_classes([AllowAny])
-def lease_detail(request,usr):
-    try:
-        tenant = User.objects.get(username=usr, role='Tenant') 
-    except User.DoesNotExist:
-        return Response({"error": "Landlord with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def lease_detail_view(request,usr):
+    tenant=request.user
     if request.method == "GET":
         user = Lease.objects.get(tenant=tenant,id=id)
         serializer = LeaseSerializer(user,context={'request': request})
@@ -115,10 +98,11 @@ def lease_detail(request,usr):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
             
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def user_property(request,usr):
+@permission_classes([IsAuthenticated])
+def user_property_view(request,usr):
     if request.method == "GET":
         lease = Lease.objects.get(tenant__username=usr)
         serializer = LeaseSerializer(lease)
@@ -126,11 +110,12 @@ def user_property(request,usr):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def tenant_property(request,usr):
+@permission_classes([IsAuthenticated])
+def tenant_property_view(request,usr):
+    tenant = request.user
     if request.method == "GET":
         try:  
-            leases = Lease.objects.filter(tenant__username=usr).select_related('property')
+            leases = Lease.objects.filter(tenant = tenant).select_related('property')
             
             property_details = []
             for lease in leases:
@@ -149,10 +134,3 @@ def tenant_property(request,usr):
             return Response({"error": "Lease not found for this tenant"}, status=404)
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def all_lease(request):
-    if request.method == "GET":
-        all_leases = Lease.objects.all()
-        serializer = LeaseSerializer(all_leases, many=True)
-        return Response(serializer.data)

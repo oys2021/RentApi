@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.shortcuts import render
 from rest_framework.response import  Response
 from rest_framework import status
 from authentication.models import *
@@ -10,14 +8,14 @@ from maintainace.models import *
 from maintainace.serializers import *
 from notice.serializers import *
 from notice.models import *
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from property.models import Lease
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def notice(request,usr):
-    try:
-        landlord = User.objects.get(username=usr, role='Landlord') 
-    except User.DoesNotExist:
-        return Response({"error": "Landlord with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def notice(request):
+    landlord=request.user
     if request.method == "GET":
         all_notices = Notice.objects.filter(landlord=landlord)
         serializer = NoticeSerializer(all_notices, many=True,context={'request': request})
@@ -38,17 +36,12 @@ def notice(request,usr):
     return Response({"error":"Invalid request", "details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from property.models import Lease
-
 @api_view(['GET'])
-@permission_classes([AllowAny])
-def landlord(request, usr):
+@permission_classes([IsAuthenticated])
+def landlord(request):
+    tenant= request.user
     if request.method == "GET":
-        lease = Lease.objects.filter(tenant__username=usr).select_related('property__landlord').first()
+        lease = Lease.objects.filter(tenant=tenant).select_related('property__landlord').first()
 
         if not lease:
             return Response({"error": "Landlord not found for this tenant"}, status=404)

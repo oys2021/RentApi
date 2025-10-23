@@ -18,7 +18,7 @@ class User(AbstractUser):
     firstname=models.CharField(max_length=35,null=True,blank=True)
     lastname=models.CharField(max_length=35,null=True,blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
-    is_verified=models.BooleanField(default=False)
+    is_verified=models.BooleanField(default=True)
     
     def tokens(self):    
         refresh = RefreshToken.for_user(self)

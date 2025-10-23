@@ -15,7 +15,6 @@ from rest_framework import generics, permissions
 from django.core.cache import cache
 
 
-# Create your views here.
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def messages(request,room_name):

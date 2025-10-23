@@ -11,12 +11,9 @@ from maintainace.serializers import *
 from property.serializers import *
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def maintainance(request,usr):
-    try:
-        tenant = User.objects.get(username=usr, role='Tenant') 
-    except User.DoesNotExist:
-        return Response({"error": "Tenant with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def maintainance_view(request):
+    tenant=request.user
     if request.method == "GET":
         all_maintainance = MaintenanceRequest.objects.filter(tenant=tenant)
         serializer = MaintenanceRequestSerializer(all_maintainance, many=True,context={'request': request})
@@ -38,12 +35,9 @@ def maintainance(request,usr):
 
 
 @api_view(['GET','PUT'])
-@permission_classes([AllowAny])
-def maintainance_detail(request,usr,id):
-    try:
-        tenant = User.objects.get(username=usr, role='Tenant') 
-    except User.DoesNotExist:
-        return Response({"error": "Tenant with this username does not exist."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def maintainance_detail_view(request,id):
+    tenant=request.user
     if request.method == "GET":
         user = MaintenanceRequest.objects.get(tenant=tenant,id=id)
         serializer = MaintenanceRequestSerializer(user,context={'request': request})
@@ -59,17 +53,11 @@ def maintainance_detail(request,usr,id):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
             
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def user_property(request,usr):
+@permission_classes([IsAuthenticated])
+def user_property_view(request):
+    tenant=request.user
     if request.method == "GET":
-        lease = Lease.objects.get(tenant__username=usr)
+        lease = Lease.objects.get(tenant=tenant)
         serializer = LeaseSerializer(lease)
         return Response(serializer.data)
     
-@api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def all_maintainance(request):
-    if request.method == "GET":
-        all_maintainance = MaintenanceRequest.objects.all()
-        serializer = MaintenanceRequestSerializer(all_maintainance, many=True,context={'request': request})
-        return Response(serializer.data)

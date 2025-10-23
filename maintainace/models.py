@@ -2,7 +2,6 @@ from django.db import models
 from authentication.models import *
 from property.models import *
 
-
 import os
 from django.core.exceptions import ValidationError
 
